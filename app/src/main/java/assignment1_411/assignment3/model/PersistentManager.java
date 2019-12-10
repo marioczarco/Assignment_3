@@ -75,6 +75,37 @@ public class PersistentManager extends SQLiteOpenHelper {
         //db.close();
     }
 
+    public void updateFirstNameColumn(int cwid, String NewFirstName){
+        Cursor c = mSQLiteDatabase.rawQuery("UPDATE Student SET FirstName = " + "\'" + NewFirstName + "\'" +" WHERE cwid = " + cwid, null);
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+            }
+        }
+    }
+
+    public void updateLastNameColumn(int cwid, String NewLastName){
+        Cursor c = mSQLiteDatabase.rawQuery("UPDATE Student SET LastName = " +  "\'" + NewLastName + "\'" +" WHERE cwid = " + cwid , null);
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+            }
+        }
+    }
+
+    public void updatecwidColumn(int Oldcwid, int Newcwid){
+        Cursor c = mSQLiteDatabase.rawQuery("UPDATE Student SET cwid = " +   Newcwid  +" WHERE cwid = " + Oldcwid, null);
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+            }
+        }
+    }
+
+    public void updatecwidCourses(int Oldcwid, int Newcwid){
+        Cursor c = mSQLiteDatabase.rawQuery("UPDATE CourseEnrollment SET cwid = " +   Newcwid  +" WHERE cwid = " + Oldcwid, null);
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+            }
+        }
+    }
 
     //Get Objects from database
     public ArrayList<Student> retrieveStudents() {

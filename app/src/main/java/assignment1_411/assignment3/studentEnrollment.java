@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,8 +81,7 @@ public class studentEnrollment extends AppCompatActivity {
                         String grade = editView.getText().toString();
                         editView.setEnabled(true);
                         courseEnrollments.add(new CourseEnrollment(courseid, grade));
-                        //Stopping Here
-                        //pm.addCourse(courseid, grade, Integer.valueOf(editView.getText().toString()));
+                        Toast.makeText(view.getContext(), "Class Added!", Toast.LENGTH_SHORT).show();
                         makeNewTexts(courseEnrollments);
                     }
                 }

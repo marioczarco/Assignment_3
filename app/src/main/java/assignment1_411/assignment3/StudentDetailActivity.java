@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +30,17 @@ public class StudentDetailActivity extends AppCompatActivity {
     protected Student sObj;
     protected final String TAG = "Detail Screen";
     ArrayList<CourseEnrollment> courseEnrollments;
+    private String editFirstName;
+    private String editLastName;
+    private int editBycwid;
 
+    private String doneFirstName;
+    private String doneLastName;
+    private int doneBycwid;
+    PersistentManager pm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final PersistentManager pm = new PersistentManager(getApplicationContext());
+        pm = new PersistentManager(getApplicationContext());
         Log.d(TAG, "onCreate() called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_details);
@@ -88,6 +96,7 @@ public class StudentDetailActivity extends AppCompatActivity {
                         courseEnrollments.add(new CourseEnrollment(courseid, grade));
                         pm.addCourse(courseid, grade, sObj.getcwid());
                         sObj.setmCourseEnrollments(courseEnrollments);
+                        Toast.makeText(view.getContext(), "Class Added!", Toast.LENGTH_SHORT).show();
                         makeNewTexts(courseEnrollments);
                     }
                 }
@@ -126,24 +135,55 @@ public class StudentDetailActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_edit) {
             EditText editView = (EditText) findViewById(R.id.p_first_name_id);
             editView.setEnabled(true);
+            editFirstName = editView.getText().toString();
             editView = (EditText) findViewById(R.id.p_last_name_id);
             editView.setEnabled(true);
+            editLastName = editView.getText().toString();
             editView = (EditText) findViewById(R.id.p_cwid);
             editView.setEnabled(true);
+            editBycwid = Integer.valueOf(editView.getText().toString());
 
             item.setVisible(false);
             detailMenu.findItem(R.id.action_done).setVisible(true);
         } else if (item.getItemId() == R.id.action_done) {
-            EditText editView = (EditText) findViewById(R.id.p_first_name_id);
-            StudentDB.getInstance().getStudentList().get(studentIndx).setFirstName(editView.getText().toString());
-            editView.setEnabled(false);
-            editView = (EditText) findViewById(R.id.p_last_name_id);
-            StudentDB.getInstance().getStudentList().get(studentIndx).setLastName(editView.getText().toString());
-            editView.setEnabled(false);
-            editView = (EditText) findViewById(R.id.p_cwid);
-            StudentDB.getInstance().getStudentList().get(studentIndx).setcwid(Integer.valueOf(editView.getText().toString()));
-            editView.setEnabled(false);
-            item.setVisible(false);
+            if(editFirstName != doneFirstName || editLastName != doneLastName|| editBycwid != doneBycwid ) {
+                EditText editView = (EditText) findViewById(R.id.p_first_name_id);
+                doneFirstName = editView.getText().toString();
+                StudentDB.getInstance().getStudentList().get(studentIndx).setFirstName(editView.getText().toString());
+                editView.setEnabled(false);
+                pm.updateFirstNameColumn(editBycwid, doneFirstName);
+                editView = (EditText) findViewById(R.id.p_last_name_id);
+                doneLastName = editView.getText().toString();
+                StudentDB.getInstance().getStudentList().get(studentIndx).setLastName(editView.getText().toString());
+                editView.setEnabled(false);
+                pm.updateLastNameColumn(editBycwid, doneLastName);
+                editView = (EditText) findViewById(R.id.p_cwid);
+                doneBycwid = Integer.valueOf(editView.getText().toString());
+                StudentDB.getInstance().getStudentList().get(studentIndx).setcwid(Integer.valueOf(editView.getText().toString()));
+                editView.setEnabled(false);
+                pm.updatecwidColumn(editBycwid, doneBycwid);
+                pm.updatecwidCourses(editBycwid, doneBycwid);
+                editView.setEnabled(false);
+                item.setVisible(false);
+            }
+            else if(editFirstName == doneFirstName && editLastName == doneLastName && editBycwid == doneBycwid){
+                EditText editView = (EditText) findViewById(R.id.p_first_name_id);
+                doneFirstName = editView.getText().toString();
+                StudentDB.getInstance().getStudentList().get(studentIndx).setFirstName(editView.getText().toString());
+                editView.setEnabled(false);
+                editView = (EditText) findViewById(R.id.p_last_name_id);
+                doneLastName = editView.getText().toString();
+                StudentDB.getInstance().getStudentList().get(studentIndx).setLastName(editView.getText().toString());
+                editView.setEnabled(false);
+                editView = (EditText) findViewById(R.id.p_cwid);
+                doneBycwid = Integer.valueOf(editView.getText().toString());
+                StudentDB.getInstance().getStudentList().get(studentIndx).setcwid(Integer.valueOf(editView.getText().toString()));
+                editView.setEnabled(false);
+                item.setVisible(false);
+
+
+            }
+
             detailMenu.findItem(R.id.action_edit).setVisible(true);
 
         }
